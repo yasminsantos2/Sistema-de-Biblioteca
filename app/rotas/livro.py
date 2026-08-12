@@ -1,5 +1,10 @@
-from fastapi import APIRouter
-from app.modelos.livros import Livro
+from typing import Annotated
+from fastapi import APIRouter,  Depends, HTTPException
+
+from app.dependencias import obter_livro_repositorio
+from app.banco_de_dados.livro_repository import LivroRepositorio
+from app.modelos.livro import Livro
+
 
 router = APIRouter(
     prefix="/livros"
@@ -11,17 +16,22 @@ LIVRO_LIST = [
     ]
 
 
-
+# ROTA PARA LISTAR TODOS OS LIVROS
 @router.get("/", response_model=list[Livro])
-async def listar_livros():
+async def listar_livros(livro_repositorio: Annotated["LivroRepositorio", Depends(obter_livro_repositorio)]):
+    return await livro_repositorio.listar_livros()
 
 
-    return LIVRO_LIST
-
-
+# ROTA PARA OBTER UM LIVRO PELO ID
 @router.get("/{livro_id}", response_model=Livro | None)
-async def obter_livro(livro_id: int):
-    for livro in LIVRO_LIST:
-        if livro.id == livro_id:
-            return livro
-    return None
+async def obter_livro(livro_id: int, livro_repositorio: Annotated["LivroRepositorio", Depends(obter_livro_repositorio)]):
+
+    livro = await livro_repositorio.obter_livro(livro_id)
+    if not livro:
+        raise HTTPException(status_code=404, detail="Livro não encontrado")
+    return livro
+
+
+
+
+

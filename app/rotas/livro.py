@@ -33,5 +33,26 @@ async def obter_livro(livro_id: int, livro_repositorio: Annotated["LivroReposito
 
 
 
+# ROTA PARA CRIAR UM NOVO LIVRO
+@router.post("/", response_model=Livro, status_code=201)
+async def criar_livro(
+    livro: Livro,
+    livro_repositorio: Annotated["LivroRepositorio", Depends(obter_livro_repositorio)]
+):
+    return await livro_repositorio.criar_livro(livro)
+
+
+# ROTA PARA ATUALIZAR UM LIVRO EXISTENTE
+@router.put("/{livro_id}", response_model=Livro)
+async def atualizar_livro(
+    livro_id: int,
+    livro: Livro,
+    livro_repositorio: Annotated["LivroRepositorio", Depends(obter_livro_repositorio)]
+):
+    livro_atualizado = await livro_repositorio.atualizar_livro(livro_id, livro)
+    if not livro_atualizado:
+        raise HTTPException(status_code=404, detail="Livro não encontrado")
+    return livro_atualizado
+
 
 

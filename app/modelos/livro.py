@@ -7,3 +7,8 @@ class Livro(BaseModel):
     autor: str
     categoria: str
 
+class LivroCriarAtualizar(BaseModel):
+    titulo: str
+    autor: str
+    categoria: str
+

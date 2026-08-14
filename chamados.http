@@ -1,0 +1,32 @@
+GET http://localhost:8001/livros
+
+###
+
+GET http://localhost:8001/livros/1
+
+###
+
+POST http://localhost:8001/livros
+Content-Type: application/json
+
+{
+    "titulo": "senhor dos saneis",
+    "autor": "joao",
+    "categoria": "fantasia"
+}
+
+###
+PUT http://localhost:8000/clientes/1
+Content-Type: application/json  
+
+{
+    "nome": "Raphael Rossi",
+    "email": "raphael.rossi@example.com",
+    "telefone": "11999999999"
+}
+
+###
+DELETE http://localhost:8000/clientes/1
+
+
+
